@@ -4,7 +4,7 @@
 
 ##### 源码探讨
 > 个人对源码总结：`computed`每个key生成一个对应的`watcher`，并传入watcher的配置项`{lazy:true}`，当new这个watcher时，会执行computed[key]后的函数或者是`{get:function(){},set:function(){}}`中的get函数，从而使初始化时内部所有data触发get拦截存下当前computed的watcher指向。 ---这实现了computed对于data的关联，当内部用到的data发生改变时都会触发computed
->> 补充说明：将computed每个属性的watcher放入各自内部关联的data的Dep中；当data属性发生改变，Dep执行notify通知各个watcher进行update更新；对于computed属性的watcher而言，因为设定了`lazy: true`所以update时，==只会将`this.dirty = true`表明值被污染，并不会立即去重新获取新的computed值==；当触发computed属性的get方法时会判断`dirty`，为`true`则重新计算赋值
+>> 补充说明：将computed每个属性的watcher放入各自内部关联的data的Dep中；当data属性发生改变，Dep执行notify通知各个watcher进行update更新；对于computed属性的watcher而言，因为设定了`lazy: true`所以update时，**只会将`this.dirty = true`表明值被污染，并不会立即去重新获取新的computed值**；当触发computed属性的get方法时会判断`dirty`，为`true`则重新计算赋值
 1. `lazy: true`表示的是这个watcher绑定具有缓存性质
 2. watcher内部的`this.dirty`表示当前缓存是否被污染(即内部相关联的data是否改变了)，初始状态默认是`true`
 3. computed内部的key也进行了`Object.defineProperty`设置，每次computed[key]进行get拦截时，都会判断`this.dirty`，如果是false则直接返回上次存下的value(即watcher.value)；如果为true则触发watcher的`watcher.evaluate()`实现重新获取(将计算的最新值赋予watcher.value)，并将`this.dirty = false`；
