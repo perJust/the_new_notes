@@ -11,3 +11,8 @@
 ### 关于性能优化
 - [骨架屏的原理](https://github.com/perJust/the_new_notes/blob/master/detail/%E9%AA%A8%E6%9E%B6%E5%B1%8F%E7%9A%84%E5%8E%9F%E7%90%86.md)
 
+
+
+### 关于基础
+
+- [模块化规范的了解](https://github.com/perJust/the_new_notes/blob/master/detail/模块化规范的了解)
