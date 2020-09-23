@@ -6,6 +6,7 @@
 - [vue里computed源码分析](https://github.com/perJust/the_new_notes/blob/master/detail/vue里computed原理分析.md)
 - [watch选项的使用与操作](https://github.com/perJust/the_new_notes/blob/master/detail/watch选项的使用与操作.md)
 - [vue里watch选项的源码分析](https://github.com/perJust/the_new_notes/blob/master/detail/watch选项的原理.md)
+- [vue里props选项的源码分析](https://github.com/perJust/the_new_notes/blob/master/detail/props选项的原理.md)
 
 
 ### 关于性能优化
