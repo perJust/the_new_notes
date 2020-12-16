@@ -8,6 +8,9 @@
 - [vue里watch选项的源码分析](https://github.com/perJust/the_new_notes/blob/master/detail/watch选项的原理.md)
 - [vue里props选项的源码分析](https://github.com/perJust/the_new_notes/blob/master/detail/props选项的原理.md)
 
+#### 关于vue3.0
+- [基础随笔](https://github.com/perJust/the_new_notes/blob/master/detail/vue3.0基础随笔.md)
+
 
 ### 关于性能优化
 - [骨架屏的原理](https://github.com/perJust/the_new_notes/blob/master/detail/%E9%AA%A8%E6%9E%B6%E5%B1%8F%E7%9A%84%E5%8E%9F%E7%90%86.md)
