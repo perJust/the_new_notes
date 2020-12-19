@@ -41,6 +41,7 @@ export default {
     6、都是递归响应式数据;
  -->
 ```
+> setup函数相当于在：beforeCreate之前执行
 
 2. 相关api
 ```javascript
@@ -74,4 +75,139 @@ export default {
 
 import { triggerRef } from 'vue';
 // 由上可知，要想在shadowRef内部改变后立即触发相关改变，需要调用triggerRef进行触发，triggerRef(userRef)；
+
+import { toRow, markRow} from 'vue'
+
+export default {
+    setup() {
+        let obj = {name: '111'}
+        let state = reactive(obj);
+        let row = toRow(state);
+        // obj === row
+        // toRow表示：获取原始的传入对象
+
+        let d = markRow(obj);
+        // markRow表示：设定obj为不可响应式的数据
+        // 再进行 reactive(obj)是没用的
+    }
+}
+
+import { toRef, toRefs } from 'vue'
+
+export default {
+    setup() {
+        let obj = {name: '111', type: 1}
+        let state = toRef(obj, 'name')
+        state.value = '1'
+        // 设定obj里的name为响应式数据，state的value改变也会使obj改变
+
+        let state1 = toRefs(obj)
+        state.name.value = '1'
+        state.type.value = 2
+        // 设定obj都为响应式数据，但set时需对应refs里每个属性，一般理解为：先在toRefs里拿到每个toRef数据，然后对每个ref数据进行.value的赋值。类似 state.name.value
+    }
+}
+
+<template>
+    <div ref="isRef"></div>
+</template>
+import { ref, onMounted } from 'vue'
+
+export default {
+    setup() {
+        let isRef = ref(null)
+    
+        onMounted(() => {
+            // isRef.value --> 元素<div ref="isRef"></div>
+        })
+
+        // isRef的使用有别于vue2.0，这里是创建一个ref(null)，在template里就直接用ref属性使用了
+        return { isRef }
+    }
+}
+
+import { customRef } from 'vue'
+
+function myRef(value) {
+    return customRef((track, trigger) => {
+        return {
+            get() {
+                track();    // 通知vue这个数据需要追踪
+                return value;
+            },
+            set(newVal) {
+                value = newVal;
+                trigger();  // 触发界面相关更新
+            }
+        }
+    })
+}
+function getDataRef(url) {
+    return customRef((track, trigger) => {
+        let value = null;
+        fetch(url).then(res=>res.json()).then(res => {
+            value = res.data;
+            trigger();
+        });
+        return {
+            get() {
+                track(); 
+                return value;
+            },
+            set(newVal) {
+                value = newVal;
+                trigger();
+            }
+        }
+    })
+}
+export default {
+    setup() {
+        let state = myRef(123)；
+        let data1 = getDataRef('./static/1.json');
+        return { state }
+    }
+}
+/*
+customRef：自定义ref
+    1、自定义控制ref过程的绑定；
+    2、可以内部写异步的方法，进行优雅的获取请求数据并相应视图；
+*/
+
+import { readonly, isReadonly, shallowReadonly } from 'vue'
+export default {
+    setup() {
+        let readonlyData = readonly({name: '1', msg: { type: 1}})
+        readonlyData.name = '11';
+        readonlyData.msg.type = 11;
+        // 都是不能改变readonlyData
+
+        let shallowReadonlyData = shallowReadonly({name: '2', msg: {type: 2}});
+        shallowReadonlyData.name = '22';
+        // 不能改变
+        shallowReadonlyData.msg.type = 22;
+        // 可以改变
+
+        isReadonly(readonlyData); // true
+        isReadonly(shallowReadonlyData); // true
+
+        return { readonlyData, shallowReadonlyData };
+    }
+}
+/*
+    readonly: 递归进行只读操作；
+    shallowReadonly: 只对第一层进行只读操作；
+
+    const声明与readonly区别：
+        const: 是赋值保护，不能重新赋值
+        readonly: 是属性保护，属性不能重新赋值
+
+        如： const a = {name: '1'};
+                a = {}; // error
+                a.name = '11'; // ok
+            let state = readonly({name: '22'});
+                state.name = '11'; // error
+                // 不会在想state可不可以赋值吧？
+                // state是let声明的，关readonly什么事.
+*/
 ```
