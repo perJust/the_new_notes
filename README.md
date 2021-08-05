@@ -26,3 +26,12 @@
 ### 关于基础
 
 - [模块化规范的了解](https://github.com/perJust/the_new_notes/blob/master/detail/模块化规范的了解)
+
+
+
+### 关于架构
+
+- [docker](https://github.com/perJust/the_new_notes/blob/master/detail/docker.md)
+
+- [linux](https://github.com/perJust/the_new_notes/blob/master/detail/linux.md)
+
